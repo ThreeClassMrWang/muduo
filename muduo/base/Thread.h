@@ -15,15 +15,13 @@
 #include <boost/shared_ptr.hpp>
 #include <pthread.h>
 
-namespace muduo
-{
+namespace muduo {
 
-class Thread : boost::noncopyable
-{
- public:
-  typedef boost::function<void ()> ThreadFunc;
+class Thread : boost::noncopyable {
+public:
+  typedef boost::function<void()> ThreadFunc;
 
-  explicit Thread(const ThreadFunc&, const string& name = string());
+  explicit Thread(const ThreadFunc &, const string &name = string());
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
   explicit Thread(ThreadFunc&&, const string& name = string());
 #endif
@@ -35,19 +33,21 @@ class Thread : boost::noncopyable
   bool started() const { return started_; }
   // pthread_t pthreadId() const { return pthreadId_; }
   pid_t tid() const { return tid_; }
-  const string& name() const { return name_; }
+  const string &name() const { return name_; }
 
   static int numCreated() { return numCreated_.get(); }
 
- private:
+private:
   void setDefaultName();
 
-  bool       started_;
-  bool       joined_;
-  pthread_t  pthreadId_;
-  pid_t      tid_;
+  bool started_;
+  bool joined_;
+  pthread_t pthreadId_;
+  pid_t tid_;
   ThreadFunc func_;
-  string     name_;
+  string name_;
+  // 此处 CountDownLatch 的是：
+  // 子线程要在 start() 返回前启动
   CountDownLatch latch_;
 
   static AtomicInt32 numCreated_;
