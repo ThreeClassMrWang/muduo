@@ -35,6 +35,7 @@ public:
   pid_t tid() const { return tid_; }
   const string &name() const { return name_; }
 
+  // 统计进程中的进程个数
   static int numCreated() { return numCreated_.get(); }
 
 private:
@@ -46,10 +47,11 @@ private:
   pid_t tid_;
   ThreadFunc func_;
   string name_;
-  // 此处 CountDownLatch 的是：
+  // 此处 CountDownLatch 的作用是：
   // 子线程要在 start() 返回前启动
   CountDownLatch latch_;
 
+  // Static 原子变量
   static AtomicInt32 numCreated_;
 };
 
